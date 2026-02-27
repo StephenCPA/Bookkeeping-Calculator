@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIY Bookkeeping Cost Calculator | Reustle Accounting</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0f1f3d;
+    --navy-mid: #1a3260;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #faf7f2;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --white: #ffffff;
+    --red: #c0392b;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: var(--navy);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header-logo {
+    width: 42px;
+    height: 42px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    color: var(--navy);
+    font-size: 20px;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  .header-text h1 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--white);
+    font-size: 18px;
+    line-height: 1;
+  }
+  .header-text p {
+    color: var(--gold-light);
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 64px 40px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.08);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.06);
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    background: rgba(201,168,76,0.2);
+    color: var(--gold-light);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+  .hero h2 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--white);
+    font-size: clamp(28px, 5vw, 46px);
+    line-height: 1.15;
+    max-width: 640px;
+    margin: 0 auto 16px;
+  }
+  .hero h2 em {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.65);
+    font-size: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Main layout */
+  .main {
+    max-width: 860px;
+    margin: -32px auto 60px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Card */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 4px 40px rgba(15,31,61,0.12);
+    overflow: hidden;
+  }
+
+  .card-body {
+    padding: 44px 48px;
+  }
+
+  @media(max-width: 600px) {
+    .card-body { padding: 28px 24px; }
+    .header { padding: 20px 24px; }
+    .hero { padding: 48px 24px 70px; }
+  }
+
+  /* Section label */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+  }
+
+  /* Form fields */
+  .fields {
+    display: grid;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .field label span {
+    font-weight: 300;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+  .input-prefix {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 15px;
+    pointer-events: none;
+  }
+  .input-suffix {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 13px;
+    pointer-events: none;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid #e0e4ea;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: #f9fafc;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -moz-appearance: textfield;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+  input[type="number"]:focus {
+    outline: none;
+    border-color: var(--navy-mid);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(26,50,96,0.08);
+  }
+  .has-prefix input { padding-left: 32px; }
+  .has-suffix input { padding-right: 60px; }
+
+  /* Slider */
+  .slider-wrap {
+    margin-top: 8px;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #e0e4ea;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--navy);
+    border: 3px solid var(--white);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.2);
+    transition: background 0.2s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { background: var(--navy-mid); }
+  .slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Calculate button */
+  .btn-calculate {
+    width: 100%;
+    padding: 16px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-calculate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.06));
+  }
+  .btn-calculate:hover { background: var(--navy-mid); }
+  .btn-calculate:active { transform: scale(0.99); }
+
+  /* Results */
+  .results {
+    display: none;
+    animation: fadeUp 0.4s ease;
+  }
+  .results.visible { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .results-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e0e4ea, transparent);
+    margin: 36px 0;
+  }
+
+  /* Stat cards */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card.primary {
+    background: var(--navy);
+    color: var(--white);
+  }
+  .stat-card.secondary {
+    background: #f0f4f8;
+    color: var(--text);
+  }
+  .stat-card.accent {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    color: var(--navy);
+  }
+  .stat-card.danger {
+    background: #fef2f2;
+    color: var(--text);
+    border: 1px solid #fecaca;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+  .stat-card.primary .stat-label { opacity: 0.6; color: var(--gold-light); }
+  .stat-card.accent .stat-label { opacity: 0.7; }
+
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 400;
+  }
+  .stat-sub {
+    font-size: 12px;
+    margin-top: 6px;
+    opacity: 0.65;
+    line-height: 1.4;
+  }
+
+  /* Verdict banner */
+  .verdict {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%);
+    border-left: 4px solid var(--navy-mid);
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+  }
+  .verdict p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .verdict strong { color: var(--navy); }
+
+  /* CTA */
+  .cta-box {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    border-radius: 14px;
+    padding: 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.1);
+  }
+  .cta-box h3 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--white);
+    font-size: 24px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .cta-box p {
+    color: rgba(255,255,255,0.65);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .btn-cta {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.1s;
+    position: relative;
+  }
+  .btn-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid #e5e7eb;
+  }
+  .footer a { color: var(--navy-mid); text-decoration: none; }
+
+  /* Reset link */
+  .reset-link {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .reset-link button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .reset-link button:hover { color: var(--navy); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">R</div>
+  <div class="header-text">
+    <h1>Reustle Accounting & Finance Solutions</h1>
+    <p>Certified Public Accountant</p>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">Free Tool for Small Business Owners</div>
+  <h2>What Is DIY Bookkeeping <em>Really</em> Costing You?</h2>
+  <p>Most business owners dramatically underestimate the true cost of managing their own books. Find out your number in 30 seconds.</p>
+</section>
+
+<main class="main">
+  <div class="card">
+    <div class="card-body">
+
+      <div class="section-label">Your Inputs</div>
+
+      <div class="fields">
+        <div class="field">
+          <label>Hours per month spent on bookkeeping <span>(entering transactions, reconciling, organizing receipts, etc.)</span></label>
+          <div class="slider-wrap">
+            <input type="range" id="hoursSlider" min="1" max="40" value="8" oninput="syncSlider('hours', this.value)">
+            <div class="slider-labels"><span>1 hr</span><span id="hoursDisplay" style="font-weight:600;color:var(--navy)">8 hrs / month</span><span>40 hrs</span></div>
+          </div>
+          <div class="input-wrap has-suffix" style="margin-top:10px">
+            <input type="number" id="hours" value="8" min="1" max="200" oninput="syncInput('hoursSlider', this.value, 40); calculate()">
+            <span class="input-suffix">hrs/mo</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Your estimated hourly value <span>(what an hour of your time is worth to your business)</span></label>
+          <div class="input-wrap has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="rate" value="75" min="1" placeholder="75" oninput="calculate()">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Months per year you handle bookkeeping yourself <span>(most say 12)</span></label>
+          <div class="slider-wrap">
+            <input type="range" id="monthsSlider" min="1" max="12" value="12" oninput="syncSlider('months', this.value)">
+            <div class="slider-labels"><span>1</span><span id="monthsDisplay" style="font-weight:600;color:var(--navy)">12 months</span><span>12</span></div>
+          </div>
+          <div class="input-wrap has-suffix" style="margin-top:10px">
+            <input type="number" id="months" value="12" min="1" max="12" oninput="syncInput('monthsSlider', this.value, 12); calculate()">
+            <span class="input-suffix">months</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Estimated monthly professional bookkeeping cost <span>(edit if you have a specific quote)</span></label>
+          <div class="input-wrap has-prefix">
+            <span class="input-prefix">$</span>
+            <input type="number" id="proRate" value="400" min="1" placeholder="400" oninput="calculate()">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-calculate" onclick="calculate(); showResults()">Calculate My True Cost →</button>
+
+      <div class="results" id="results">
+        <div class="results-divider"></div>
+        <div class="section-label">Your Results</div>
+
+        <div class="stats-grid">
+          <div class="stat-card primary">
+            <div class="stat-label">Your Annual Time Cost</div>
+            <div class="stat-value" id="res-timecost">—</div>
+            <div class="stat-sub">Hours × your hourly value × months</div>
+          </div>
+          <div class="stat-card accent">
+            <div class="stat-label">Professional Bookkeeping</div>
+            <div class="stat-value" id="res-procost">—</div>
+            <div class="stat-sub">Estimated annual cost to outsource</div>
+          </div>
+          <div class="stat-card danger">
+            <div class="stat-label">You're Overpaying By</div>
+            <div class="stat-value" id="res-diff">—</div>
+            <div class="stat-sub" id="res-diff-sub">vs. hiring a professional</div>
+          </div>
+          <div class="stat-card secondary">
+            <div class="stat-label">Hours Back Per Year</div>
+            <div class="stat-value" id="res-hours">—</div>
+            <div class="stat-sub">Time you could reinvest in your business</div>
+          </div>
+        </div>
+
+        <div class="verdict" id="verdict-box">
+          <p id="verdict-text"></p>
+        </div>
+
+        <div class="cta-box">
+          <h3>Ready to Get Your Time Back?</h3>
+          <p>Reustle Accounting & Finance Solutions offers bookkeeping services tailored to small businesses. Let's talk about what the right solution looks like for you — no obligation.</p>
+          <a href="mailto:contact@reustleaccounting.com" class="btn-cta">Schedule a Free Consultation</a>
+        </div>
+
+        <div class="reset-link">
+          <button onclick="resetForm()">← Recalculate with different numbers</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>© 2025 Reustle Accounting & Finance Solutions &nbsp;|&nbsp; <a href="#">reustleaccounting.com</a></p>
+  <p style="margin-top:6px;">This calculator provides estimates for illustrative purposes. Results will vary based on individual circumstances.</p>
+</footer>
+
+<script>
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function syncSlider(field, val) {
+    const input = document.getElementById(field);
+    input.value = val;
+    if (field === 'hours') document.getElementById('hoursDisplay').textContent = val + ' hrs / month';
+    if (field === 'months') document.getElementById('monthsDisplay').textContent = val + ' months';
+    calculate();
+  }
+
+  function syncInput(sliderId, val, max) {
+    const slider = document.getElementById(sliderId);
+    const clamped = Math.min(val, max);
+    slider.value = clamped;
+    if (sliderId === 'hoursSlider') document.getElementById('hoursDisplay').textContent = clamped + ' hrs / month';
+    if (sliderId === 'monthsSlider') document.getElementById('monthsDisplay').textContent = clamped + ' months';
+  }
+
+  function calculate() {
+    const hours = parseFloat(document.getElementById('hours').value) || 0;
+    const rate = parseFloat(document.getElementById('rate').value) || 0;
+    const months = parseFloat(document.getElementById('months').value) || 0;
+    const proRate = parseFloat(document.getElementById('proRate').value) || 0;
+
+    const timeCost = hours * rate * months;
+    const proCost = proRate * months;
+    const diff = timeCost - proCost;
+    const totalHours = hours * months;
+
+    document.getElementById('res-timecost').textContent = fmt(timeCost);
+    document.getElementById('res-procost').textContent = fmt(proCost);
+    document.getElementById('res-hours').textContent = totalHours + ' hrs';
+
+    const diffEl = document.getElementById('res-diff');
+    const diffSub = document.getElementById('res-diff-sub');
+    const verdictBox = document.getElementById('verdict-box');
+    const verdictText = document.getElementById('verdict-text');
+
+    if (diff > 0) {
+      diffEl.textContent = fmt(diff);
+      diffSub.textContent = 'more than hiring a professional';
+      verdictBox.style.borderLeftColor = '#c0392b';
+      verdictBox.style.background = 'linear-gradient(135deg, #fff5f5 0%, #fff0f0 100%)';
+      verdictText.innerHTML = `Based on your inputs, your DIY bookkeeping is costing you <strong>${fmt(timeCost)} per year</strong> in time alone — that's <strong>${fmt(diff)} more</strong> than hiring a professional bookkeeper. You're essentially paying a premium to do work that isn't your specialty, time that could be spent serving clients or growing your business.`;
+    } else if (diff < 0) {
+      diffEl.textContent = fmt(Math.abs(diff));
+      diffSub.textContent = 'less than hiring a professional';
+      verdictBox.style.borderLeftColor = '#16a34a';
+      verdictBox.style.background = 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)';
+      verdictText.innerHTML = `Your time estimate suggests professional bookkeeping would cost <strong>${fmt(Math.abs(diff))} more per year</strong> than your current time investment. However, consider whether bookkeeping is the best use of your expertise — and whether the accuracy, peace of mind, and tax-ready financials are worth the difference.`;
+    } else {
+      diffEl.textContent = '$0';
+      diffSub.textContent = 'cost difference';
+      verdictText.innerHTML = `Your DIY cost is roughly equal to what a professional would charge. But a professional brings accuracy, compliance expertise, and time freedom — without the mental overhead of managing it yourself.`;
+    }
+  }
+
+  function showResults() {
+    calculate();
+    const results = document.getElementById('results');
+    results.classList.add('visible');
+    setTimeout(() => results.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+  }
+
+  function resetForm() {
+    document.getElementById('results').classList.remove('visible');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Init display
+  calculate();
+</script>
+</body>
+</html>
